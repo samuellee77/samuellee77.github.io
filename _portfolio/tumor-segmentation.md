@@ -1,6 +1,6 @@
 ---
 title: "Liver Tumor Detection Model"
-excerpt: "In this project, we developed a liver tumor detection model using the U-Net architecture to accurately identify and segment tumors in liver images. The model achieved a 68% accuracy on the evaluation dataset, demonstrating a moderate ability to detect liver tumors. Although the model's performance is not yet optimal, it lays the foundation for future advancements.<br/><img src='/images/tumor_summary.png'>"
+excerpt: "In this project, we developed a liver tumor detection model using the U-Net architecture to accurately identify and segment tumors in liver images. The model achieved a 68% accuracy on the evaluation dataset, demonstrating a moderate ability to detect liver tumors. Although the model's performance is not yet optimal, it lays the foundation for future advancements."
 collection: portfolio
 ---
 ## Liver Tumor Detection Model
