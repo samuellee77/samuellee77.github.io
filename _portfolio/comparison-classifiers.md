@@ -2,6 +2,7 @@
 title: "Evaluating Classifier Performance Across Datasets and Partition Strategies"
 excerpt: "This study evaluates the performance of Random Forest, Logistic Regression, and Support Vector Machine classifiers on UCI datasets (Adult, Wine Quality, and Breast Cancer) under varying train-test splits. Random Forest consistently achieved high accuracy, Logistic Regression excelled with smaller training sizes, and Support Vector Machine performed best with sufficient data. Partition size influenced results, benefiting larger datasets like Wine Quality but causing overfitting in the small Breast Cancer dataset. These findings highlight the importance of aligning models and data strategies with dataset characteristics for optimal performance."
 collection: portfolio
+order: 6
 ---
 
 ## Abstract

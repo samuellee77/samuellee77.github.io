@@ -2,6 +2,7 @@
 title: "Forum Bot & Chat Bot with Azure OpenAI"
 excerpt: "This project demonstrates how to integrate OpenAI's powerful language model into a Discourse-based auto reply bot and a web chatbot using Microsoft Azure services. <br/><img src='/images/azure-overview.png'>"
 collection: portfolio
+order: 1
 ---
 
 #### GitHub Link: <https://github.com/samuellee77/azure-openai-chat-forum-bot>

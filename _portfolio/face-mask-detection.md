@@ -1,7 +1,8 @@
 ---
 title: "Face Mask Detection"
-excerpt: "Short description of portfolio item number 1<br/><img src='/images/500x300.png'>"
+excerpt: "Welcome to **Face Mask Detection Project**! It uses computer vision to detect whether a person is wearing a face mask or not. The system is built using Python and OpenCV."
 collection: portfolio
+order: 7
 ---
 
 Welcome to **Face Mask Detection Project**!

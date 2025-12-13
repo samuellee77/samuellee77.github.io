@@ -2,6 +2,7 @@
 title: "League of Legend Pro Game Analysis"
 excerpt: "This project analyzes 2022 professional League of Legends data to understand team wins, focusing on team side (blue vs. red) and champion bans/picks. We find that blue side teams win more often and that incorporating champion pick rates and team side into a prediction model modestly improves performance, with fairness analysis highlighting a blue side advantage. <br/><img width='500' src='/images/worlds.png'><br/><a target='_blank' rel='noopener noreferrer' href='https://www.riotgames.com/en/news/meet-team-behind-worlds-2022-esports-broadcast'>Image Source</a>"
 collection: portfolio
+order: 9
 ---
 #### **Authors**: Samuel Lee, Nian-Nian Wang
 

@@ -2,6 +2,7 @@
 title: "Classification of Obesity Levels using PCA and Random Forest"
 excerpt: "In this project, we use PCA and Random Forest classifier to classify the obesity levels based on their physical measurements and lifestyle factor."
 collection: portfolio
+order: 8
 ---
 
 ## Introduction
