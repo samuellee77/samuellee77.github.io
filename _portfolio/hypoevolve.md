@@ -65,6 +65,8 @@ Team: **Jefferson Chen, Samuel Lee** (advisors: Prof. Zhiting Hu, Dr. Zhen Wang,
 
 ## Poster
 
+![HypoEvolve capstone poster: genetic-algorithm and multi-agent LLM framework for biological hypothesis discovery, with DepMap and Type-2 Diabetes results](/images/hypoevolve_poster.png)
+
 <embed src="/files/hypoevolve_capstone_poster.pdf" type="application/pdf" width="100%" height="800px">
 
 [Download the poster (PDF)](/files/hypoevolve_capstone_poster.pdf)
