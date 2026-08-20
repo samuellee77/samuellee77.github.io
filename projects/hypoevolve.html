@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HypoEvolve: Benchmarking LLM-Generated Biological Hypotheses — Hsin-Yuan (Samuel) Lee</title>
+<meta name="description" content="A genetic algorithm paired with a multi-agent LLM loop that refines biological hypotheses for drug repurposing and Type-2 Diabetes gene identification.">
+<link rel="canonical" href="https://samuellee77.github.io/projects/hypoevolve.html">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Hsin-Yuan (Samuel) Lee">
+<meta property="og:title" content="HypoEvolve: Benchmarking LLM-Generated Biological Hypotheses">
+<meta property="og:description" content="A genetic algorithm paired with a multi-agent LLM loop that refines biological hypotheses for drug repurposing and Type-2 Diabetes gene identification.">
+<meta property="og:url" content="https://samuellee77.github.io/projects/hypoevolve.html">
+<meta property="og:image" content="https://samuellee77.github.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HypoEvolve: Benchmarking LLM-Generated Biological Hypotheses">
+<meta name="twitter:description" content="A genetic algorithm paired with a multi-agent LLM loop that refines biological hypotheses for drug repurposing and Type-2 Diabetes gene identification.">
+<meta name="twitter:image" content="https://samuellee77.github.io/assets/og-image.png">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#fbf8f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#181612" media="(prefers-color-scheme: dark)">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <a class="site-header__name" href="/">Samuel Lee</a>
+  <nav class="site-nav" aria-label="Main">
+    <a href="/">About</a>
+    <a href="/portfolio.html" aria-current="page">Portfolio</a>
+    <a href="/publications.html">Publications</a>
+    <a href="/cv.html">CV</a>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="wrap wrap--narrow" style="padding-top:56px; padding-bottom:80px;">
+
+    <a class="back-link" href="/portfolio.html">&larr; All projects</a>
+
+    <p class="eyebrow">April 2026</p>
+    <h1 class="page-title">HypoEvolve: Benchmarking LLM-Generated Biological Hypotheses</h1>
+    <p class="lede" style="margin-bottom:24px;">A genetic algorithm paired with a multi-agent LLM loop that refines biological hypotheses for drug repurposing and Type-2 Diabetes gene identification.</p>
+
+    <ul class="meta-row"><li class="tag">LLM agents</li><li class="tag">Evolutionary search</li><li class="tag">Computational biology</li></ul>
+    <div class="pub__links" style="margin:0 0 36px;"><a class="pill" href="/files/hypoevolve_capstone_poster.pdf">Poster (PDF)</a></div>
+
+    <article class="prose">
+      <h2 id="overview">Overview</h2>
+      <p><strong>HypoEvolve</strong> is my senior capstone project (UCSD DSC 180A/B) and the project behind the
+      manuscript currently under review at ICML 2026. It treats scientific hypothesis generation
+      as an <strong>evolutionary optimization</strong> problem: instead of a single-pass LLM prompt, a
+      population of candidate hypotheses is iteratively reviewed, selected, recombined, and
+      mutated by a multi-agent LLM loop.</p>
+      <blockquote>
+      <p>Presented as a poster at the <strong>UCSD Halıcıoğlu Data Science Institute (HDSI) Senior
+      Capstone Showcase</strong>, Spring 2026.</p>
+      </blockquote>
+      <p>Team: <strong>Jefferson Chen, Samuel Lee</strong> (advisors: Prof. Zhiting Hu, Dr. Zhen Wang, Jieyuan Liu).</p>
+      <h2 id="what-the-poster-covers">What the poster covers</h2>
+      <ul>
+      <li><strong>Problem framing.</strong> Single-pass LLM prompting produces one hypothesis with no systematic
+        refinement — LLMs lack the <em>selection pressure</em> researchers use to keep strong ideas and
+        revise weak ones.</li>
+      <li><strong>Framework.</strong> A genetic-algorithm cycle (review → selection → crossover → mutation)
+        wrapped in a multi-agent loop: a <strong>Generation Agent</strong> proposes, a <strong>Reflection Agent</strong>
+        critiques across a 5-stage review, an <strong>Evolution Agent</strong> produces offspring, and a
+        <strong>Supervisor Agent</strong> tracks the best hypothesis across generations.</li>
+      <li><strong>Fitness.</strong> Each hypothesis is scored along three LLM-evaluated axes — <strong>correctness
+        (s_c)</strong>, <strong>novelty (s_n)</strong>, and <strong>quality (s_q)</strong> — aggregated with learnable weights
+        into a single fitness signal <code>f(h)</code>.</li>
+      <li><strong>Tasks.</strong> Two biological discovery tasks: <strong>Drug Repurposing</strong> validated against DepMap
+        CRISPR dependency data, and <strong>Type-2 Diabetes</strong> associated-gene identification.</li>
+      </ul>
+      <h2 id="results">Results</h2>
+      <ul>
+      <li><strong>Drug Repurposing (31 cancer types).</strong> HypoEvolve reaches an average DepMap score of
+        <strong>93.6%</strong> vs. <strong>56.3%</strong> for vanilla single-pass prompting — a <strong>+66%</strong> relative
+        improvement.</li>
+      <li><strong>Head-to-head wins.</strong> HypoEvolve wins <strong>20 / 31</strong> cancer types (65%) vs. vanilla's
+        3 / 31 (10%), with 8 ties.</li>
+      <li><strong>Quality tiers.</strong> Excellent rate (fitness ≥ 0.9) jumps from <strong>42% → 84%</strong> between
+        vanilla and HypoEvolve.</li>
+      <li><strong>Learning curve.</strong> Average best fitness climbs monotonically across generations
+        (n = 34, μ ± σ), consistent with genuine selection pressure rather than noisy search.</li>
+      <li><strong>T2D task.</strong> HypoEvolve variants dominate the head-to-head ranking against LLM
+        baselines and a random baseline on mean top-1 OT score.</li>
+      </ul>
+      <h2 id="key-takeaways">Key takeaways</h2>
+      <ul>
+      <li>Evolutionary refinement yields <strong>large, consistent gains</strong> under <em>external</em> biological
+        validation.</li>
+      <li>Gains are achieved <strong>without DepMap leakage</strong> into the generation loop.</li>
+      <li>The framework is <strong>task-general</strong> — it can be pointed at any discovery task where
+        hypotheses can be LLM-scored along correctness / novelty / quality.</li>
+      </ul>
+      <h2 id="limitations-next-steps">Limitations &amp; next steps</h2>
+      <ul>
+      <li>Current fitness relies on LLM-based internal scoring; stronger calibration and human
+        review are needed.</li>
+      <li>Planned ablations: remove crossover, remove mutation, remove elitism to quantify each
+        operator's contribution.</li>
+      <li>Expand to additional biological research tasks beyond drug repurposing and T2D.</li>
+      </ul>
+      <h2 id="poster">Poster</h2>
+      <p><img loading="lazy" decoding="async" alt="HypoEvolve capstone poster: genetic-algorithm and multi-agent LLM framework for biological hypothesis discovery, with DepMap and Type-2 Diabetes results" src="/images/hypoevolve_poster.webp" /></p>
+      <figure class="pdf-figure">
+        <object class="pdf-embed" data="/files/hypoevolve_capstone_poster.pdf" type="application/pdf">
+          <p class="pdf-embed__fallback">This browser cannot display the embedded PDF. <a href="/files/hypoevolve_capstone_poster.pdf">Download hypoevolve_capstone_poster.pdf</a> instead.</p>
+        </object>
+        <figcaption><a href="/files/hypoevolve_capstone_poster.pdf">Open the full PDF &rarr;</a></figcaption>
+      </figure>
+      <p><a href="/files/hypoevolve_capstone_poster.pdf">Download the poster (PDF)</a></p>
+    </article>
+
+  </div>
+</main>
+
+<footer class="site-footer wrap--narrow">
+  <div>© 2026 Hsin-Yuan (Samuel) Lee</div>
+  <div class="site-footer__links">
+    <a href="/portfolio.html">Portfolio</a>
+    <a href="https://github.com/samuellee77">GitHub</a>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>League of Legends Pro Game Analysis — Hsin-Yuan (Samuel) Lee</title>
+<meta name="description" content="An analysis of 2022 professional League of Legends match data on team side and champion picks and bans, with a fairness analysis of the resulting model.">
+<link rel="canonical" href="https://samuellee77.github.io/projects/league-analysis.html">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Hsin-Yuan (Samuel) Lee">
+<meta property="og:title" content="League of Legends Pro Game Analysis">
+<meta property="og:description" content="An analysis of 2022 professional League of Legends match data on team side and champion picks and bans, with a fairness analysis of the resulting model.">
+<meta property="og:url" content="https://samuellee77.github.io/projects/league-analysis.html">
+<meta property="og:image" content="https://samuellee77.github.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="League of Legends Pro Game Analysis">
+<meta name="twitter:description" content="An analysis of 2022 professional League of Legends match data on team side and champion picks and bans, with a fairness analysis of the resulting model.">
+<meta name="twitter:image" content="https://samuellee77.github.io/assets/og-image.png">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#fbf8f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#181612" media="(prefers-color-scheme: dark)">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <a class="site-header__name" href="/">Samuel Lee</a>
+  <nav class="site-nav" aria-label="Main">
+    <a href="/">About</a>
+    <a href="/portfolio.html" aria-current="page">Portfolio</a>
+    <a href="/publications.html">Publications</a>
+    <a href="/cv.html">CV</a>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="wrap wrap--narrow" style="padding-top:56px; padding-bottom:80px;">
+
+    <a class="back-link" href="/portfolio.html">&larr; All projects</a>
+
+    <p class="eyebrow">2023</p>
+    <h1 class="page-title">League of Legends Pro Game Analysis</h1>
+    <p class="lede" style="margin-bottom:24px;">An analysis of 2022 professional League of Legends match data on team side and champion picks and bans, with a fairness analysis of the resulting model.</p>
+
+    <ul class="meta-row"><li class="tag">Data analysis</li><li class="tag">Fairness</li></ul>
+    <div class="pub__links" style="margin:0 0 36px;"><a class="pill" href="https://github.com/samuellee77/league-of-legend-pro-game-analysis">GitHub</a></div>
+
+    <article class="prose">
+      <p class="entry__sub"><strong>Authors</strong>: Samuel Lee, Nian-Nian Wang</p>
+      <p class="entry__sub">GitHub Link: <a href="https://github.com/samuellee77/league-of-legend-pro-game-analysis">https://github.com/samuellee77/league-of-legend-pro-game-analysis</a></p>
+      <h2 id="introduction">Introduction</h2>
+      <p>The data set we are working with is professional League of Legends match data for 2022. The main question we explore throughout this EDA is what makes a team win a match. We mainly look at two aspects: the team's side (blue or red) and the champions they have selected and banned. One of the original motivations for this is due to the widely known rumor that the blue side wins more than the red, and teams tend to choose to be on the blue side when they have priority. We want to verify whether the rumor is true and back it up with data. On the other hand, we are also curious how much of an impact the champions being selected or banned have on the outcome of the match.</p>
+      <p>Our data set is accessed from the website <a href="https://oracleselixir.com/tools/downloads">Oracle’s Elixir</a>. The original data consists of 148992 rows. Every 12 rows is data for a single match; 10 of them are player data, and 2 are team data. In our project, we have decided to focus on Tier 1 and split the data into two sets: player data and team data.</p>
+      <p>The main columns we work with are <code>gameid</code>, <code>url</code>, <code>league</code>, <code>split</code>, <code>playoffs</code>, <code>patch</code>, <code>side</code>, <code>ban1</code>, <code>ban2</code>, <code>ban3</code>, <code>ban4</code>, <code>ban5</code>, <code>pick1</code>, <code>pick2</code>, <code>pick3</code>, <code>pick4</code>, <code>pick5</code>, <code>gamelength</code>, <code>result</code>. Among all, <code>side</code>, <code>ban1</code>, <code>ban2</code>, <code>ban3</code>, <code>ban4</code>, <code>ban5</code>, <code>pick1</code>, <code>pick2</code>, <code>pick3</code>, <code>pick4</code>, <code>pick5</code>, <code>result</code> were mainly used for exploring the factors for the team to win. Most others were used for early exploratory data analysis and data cleaning to understand more about the data set.</p>
+      <p>The description to the relevant columns are as follows:</p>
+      <ul>
+      <li><code>gameid</code>: unique game identification number</li>
+      <li><code>url</code>: url to game data else NaN</li>
+      <li><code>league</code>: the region/league</li>
+      <li><code>split</code>: the split/season the game was in</li>
+      <li><code>playoffs</code>: 0 if the game was in regular season; 1 if the game was in playoffs</li>
+      <li><code>patch</code>: version of game</li>
+      <li><code>side</code>: the team's side, either red or blue</li>
+      <li><code>ban1</code>, <code>ban2</code>, <code>ban3</code>, <code>ban4</code>, <code>ban5</code>: the 5 champions banned by the opposing team, meaning the champions that cannot be used</li>
+      <li><code>pick1</code>, <code>pick2</code>, <code>pick3</code>, <code>pick4</code>, <code>pick5</code>: the 5 champions being picked by the team</li>
+      <li><code>gamelength</code>: time the game took in seconds</li>
+      <li><code>result</code>: 1 if the team won; 0 if the team lost</li>
+      </ul>
+      <h2 id="data-cleaning-and-exploratory-data-analysis">Data Cleaning and Exploratory Data Analysis</h2>
+      <h3 id="data-cleaning">Data Cleaning</h3>
+      <p>For the data cleaning, we first separate the orignal dataset into two: <code>tier1_player</code> and <code>tier1_team</code>, that is separate the first 10 rows (10 players per match) and 2 rows (2 teams per match) for every 12 rows, because we found that the rows in the original dataset belong to two categories of players and teams. If we don't separate them, there will be many missing by design values.</p>
+      <p>A snippet of <code>tier1_player</code>:</p>
+      <div class="scroll-x"><table>
+      <thead>
+      <tr>
+      <th>gameid</th>
+      <th>datacompleteness</th>
+      <th>url</th>
+      <th>league</th>
+      <th>year</th>
+      <th>split</th>
+      <th>playoffs</th>
+      <th>date</th>
+      <th>game</th>
+      <th>patch</th>
+      <th>...</th>
+      <th>ban3</th>
+      <th>ban4</th>
+      <th>ban5</th>
+      <th>pick1</th>
+      <th>pick2</th>
+      <th>pick3</th>
+      <th>pick4</th>
+      <th>pick5</th>
+      <th>gamelength</th>
+      <th>result</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>8401-8401_game_1</td>
+      <td>partial</td>
+      <td>https://lpl.qq.com/es/stats.shtml?bmid=8401</td>
+      <td>LPL</td>
+      <td>2022</td>
+      <td>Spring</td>
+      <td>0</td>
+      <td>2022-01-10 09:24:26</td>
+      <td>1</td>
+      <td>12.01</td>
+      <td>...</td>
+      <td>Caitlyn</td>
+      <td>Jayce</td>
+      <td>Camille</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1365</td>
+      <td>1</td>
+      </tr>
+      <tr>
+      <td>8401-8401_game_1</td>
+      <td>partial</td>
+      <td>https://lpl.qq.com/es/stats.shtml?bmid=8401</td>
+      <td>LPL</td>
+      <td>2022</td>
+      <td>Spring</td>
+      <td>0</td>
+      <td>2022-01-10 09:24:26</td>
+      <td>1</td>
+      <td>12.01</td>
+      <td>...</td>
+      <td>Caitlyn</td>
+      <td>Jayce</td>
+      <td>Camille</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1365</td>
+      <td>1</td>
+      </tr>
+      <tr>
+      <td>8401-8401_game_1</td>
+      <td>partial</td>
+      <td>https://lpl.qq.com/es/stats.shtml?bmid=8401</td>
+      <td>LPL</td>
+      <td>2022</td>
+      <td>Spring</td>
+      <td>0</td>
+      <td>2022-01-10 09:24:26</td>
+      <td>1</td>
+      <td>12.01</td>
+      <td>...</td>
+      <td>Caitlyn</td>
+      <td>Jayce</td>
+      <td>Camille</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1365</td>
+      <td>1</td>
+      </tr>
+      <tr>
+      <td>8401-8401_game_1</td>
+      <td>partial</td>
+      <td>https://lpl.qq.com/es/stats.shtml?bmid=8401</td>
+      <td>LPL</td>
+      <td>2022</td>
+      <td>Spring</td>
+      <td>0</td>
+      <td>2022-01-10 09:24:26</td>
+      <td>1</td>
+      <td>12.01</td>
+      <td>...</td>
+      <td>Caitlyn</td>
+      <td>Jayce</td>
+      <td>Camille</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1365</td>
+      <td>1</td>
+      </tr>
+      <tr>
+      <td>8401-8401_game_1</td>
+      <td>partial</td>
+      <td>https://lpl.qq.com/es/stats.shtml?bmid=8401</td>
+      <td>LPL</td>
+      <td>2022</td>
+      <td>Spring</td>
+      <td>0</td>
+      <td>2022-01-10 09:24:26</td>
+      <td>1</td>
+      <td>12.01</td>
+      <td>...</td>
+      <td>Caitlyn</td>
+      <td>Jayce</td>
+      <td>Camille</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1365</td>
+      <td>1</td>
+      </tr>
+      </tbody>
+      </table></div>
+      <p>A snippet of <code>tier1_team</code>:</p>
+      <div class="scroll-x"><table>
+      <thead>
+      <tr>
+      <th>gameid</th>
+      <th>datacompleteness</th>
+      <th>url</th>
+      <th>league</th>
+      <th>year</th>
+      <th>split</th>
+      <th>playoffs</th>
+      <th>date</th>
+      <th>game</th>
+      <th>patch</th>
+      <th>...</th>
+      <th>ban3</th>
+      <th>ban4</th>
+      <th>ban5</th>
+      <th>pick1</th>
+      <th>pick2</th>
+      <th>pick3</th>
+      <th>pick4</th>
+      <th>pick5</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>8401-8401_game_1</td>
+      <td>partial</td>
+      <td>https://lpl.qq.com/es/stats.shtml?bmid=8401</td>
+      <td>LPL</td>
+      <td>2022</td>
+      <td>Spring</td>
+      <td>0</td>
+      <td>2022-01-10 09:24:26</td>
+      <td>1</td>
+      <td>12.01</td>
+      <td>...</td>
+      <td>Caitlyn</td>
+      <td>Jayce</td>
+      <td>Camille</td>
+      <td>Jinx</td>
+      <td>Jarvan IV</td>
+      <td>Nautilus</td>
+      <td>Syndra</td>
+      <td>Gwen</td>
+      </tr>
+      <tr>
+      <td>8401-8401_game_1</td>
+      <td>partial</td>
+      <td>https://lpl.qq.com/es/stats.shtml?bmid=8401</td>
+      <td>LPL</td>
+      <td>2022</td>
+      <td>Spring</td>
+      <td>0</td>
+      <td>2022-01-10 09:24:26</td>
+      <td>1</td>
+      <td>12.01</td>
+      <td>...</td>
+      <td>Akali</td>
+      <td>LeBlanc</td>
+      <td>Rumble</td>
+      <td>Xin Zhao</td>
+      <td>Thresh</td>
+      <td>Aphelios</td>
+      <td>Vex</td>
+      <td>Jax</td>
+      </tr>
+      <tr>
+      <td>8401-8401_game_2</td>
+      <td>partial</td>
+      <td>https://lpl.qq.com/es/stats.shtml?bmid=8401</td>
+      <td>LPL</td>
+      <td>2022</td>
+      <td>Spring</td>
+      <td>0</td>
+      <td>2022-01-10 10:09:22</td>
+      <td>2</td>
+      <td>12.01</td>
+      <td>...</td>
+      <td>Thresh</td>
+      <td>Jayce</td>
+      <td>Camille</td>
+      <td>Jinx</td>
+      <td>Xin Zhao</td>
+      <td>Rakan</td>
+      <td>Rumble</td>
+      <td>Corki</td>
+      </tr>
+      <tr>
+      <td>8401-8401_game_2</td>
+      <td>partial</td>
+      <td>https://lpl.qq.com/es/stats.shtml?bmid=8401</td>
+      <td>LPL</td>
+      <td>2022</td>
+      <td>Spring</td>
+      <td>0</td>
+      <td>2022-01-10 10:09:22</td>
+      <td>2</td>
+      <td>12.01</td>
+      <td>...</td>
+      <td>Jarvan IV</td>
+      <td>LeBlanc</td>
+      <td>Akali</td>
+      <td>Lee Sin</td>
+      <td>Leona</td>
+      <td>Ziggs</td>
+      <td>Gangplank</td>
+      <td>Twisted Fate</td>
+      </tr>
+      <tr>
+      <td>8402-8402_game_1</td>
+      <td>partial</td>
+      <td>https://lpl.qq.com/es/stats.shtml?bmid=8402</td>
+      <td>LPL</td>
+      <td>2022</td>
+      <td>Spring</td>
+      <td>0</td>
+      <td>2022-01-10 11:26:11</td>
+      <td>1</td>
+      <td>12.01</td>
+      <td>...</td>
+      <td>Aphelios</td>
+      <td>Nautilus</td>
+      <td>Leona</td>
+      <td>Jinx</td>
+      <td>Viego</td>
+      <td>Thresh</td>
+      <td>Corki</td>
+      <td>Graves</td>
+      </tr>
+      </tbody>
+      </table></div>
+      <h3 id="univariate-analysis">Univariate Analysis</h3>
+      <h4 id="number-of-games-played-in-each-patch">Number of Games Played in Each Patch</h4>
+      <p>We can see that there were no games played in tier 1 leagues in 12.07, and there were only few games in 12.06, 12.08, and 12.16. It is because that most league spring playoffs happened in 12.05 and 12.06, so there was no game played in 12.07. The Mid-Seasonal Invitational(MSI) was hold during 12.08, so there was few games in 12.08 in tier 1 leagues, as we do not include the international competitions. Same reason apply to 12.16, most league summer playoffs happened in 12.15 and 12.16, and then the Worlds happened in 12.18.</p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig1.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe>
+      </p>
+      <h4 id="distribution-of-game-length">Distribution of Game Length</h4>
+      <p>For the following plot, we can see that the distribution of game length is skewed to the right, with the <strong>median</strong> of <strong>31.39 minutes</strong>. We converted from seconds to minutes here for easier interpretation.</p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig2.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe>
+      </p>
+      <h3 id="bivariate-analysis">Bivariate Analysis</h3>
+      <h4 id="average-game-length-in-each-tier-1-league">Average Game Length in Each Tier 1 League</h4>
+      <p>From the following boxplot and barplot, we can see that there is no significant game length between each league. One interesting fact is that <strong>LCK</strong>, known for best game strategy in the game with less teamfight, has the longest average game length, while <strong>VCS</strong>, known for its bloody and frequent teamfights, has the shortest average game length.</p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig3.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe>
+      </p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig4.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe>
+      </p>
+      <h4 id="blue-red-team-win-rate-in-each-tier-1-league">Blue / Red Team Win Rate in Each Tier 1 League</h4>
+      <p>From the table and grouped barplot below, we can see that in most leagues (except LCS, LLA, and VCS), <strong>the win rate of blue side is higher than the win rate of red side.</strong> Especially in PCS, the difference of the win rates between blue and red sides is about 0.20, which is a significant amount that can affect the result of the game.</p>
+      <div class="scroll-x"><table>
+      <thead>
+      <tr>
+      <th style="text-align: left;">league</th>
+      <th style="text-align: right;">Blue</th>
+      <th style="text-align: right;">Red</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td style="text-align: left;">CBLOL</td>
+      <td style="text-align: right;">0.539095</td>
+      <td style="text-align: right;">0.460905</td>
+      </tr>
+      <tr>
+      <td style="text-align: left;">LCK</td>
+      <td style="text-align: right;">0.507495</td>
+      <td style="text-align: right;">0.492505</td>
+      </tr>
+      <tr>
+      <td style="text-align: left;">LCO</td>
+      <td style="text-align: right;">0.514151</td>
+      <td style="text-align: right;">0.485849</td>
+      </tr>
+      <tr>
+      <td style="text-align: left;">LCS</td>
+      <td style="text-align: right;">0.493464</td>
+      <td style="text-align: right;">0.506536</td>
+      </tr>
+      <tr>
+      <td style="text-align: left;">LEC</td>
+      <td style="text-align: right;">0.534979</td>
+      <td style="text-align: right;">0.465021</td>
+      </tr>
+      <tr>
+      <td style="text-align: left;">LJL</td>
+      <td style="text-align: right;">0.514019</td>
+      <td style="text-align: right;">0.485981</td>
+      </tr>
+      <tr>
+      <td style="text-align: left;">LLA</td>
+      <td style="text-align: right;">0.491979</td>
+      <td style="text-align: right;">0.508021</td>
+      </tr>
+      <tr>
+      <td style="text-align: left;">LPL</td>
+      <td style="text-align: right;">0.549618</td>
+      <td style="text-align: right;">0.450382</td>
+      </tr>
+      <tr>
+      <td style="text-align: left;">PCS</td>
+      <td style="text-align: right;">0.605166</td>
+      <td style="text-align: right;">0.394834</td>
+      </tr>
+      <tr>
+      <td style="text-align: left;">VCS</td>
+      <td style="text-align: right;">0.495356</td>
+      <td style="text-align: right;">0.504644</td>
+      </tr>
+      </tbody>
+      </table></div>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig5.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe>
+      </p>
+      <h3 id="interesting-aggregates">Interesting Aggregates</h3>
+      <h4 id="number-of-games-played-in-each-tier-1-league-in-2022">Number of Games Played in Each Tier 1 League in 2022</h4>
+      <p>From the plot below, we can see that LPL has the most games played in 2022. This is because they had 17 teams with Single Round Robin and BO3(Best of three) in regular seasons. <a href="https://lol.fandom.com/wiki/LPL/2022_Season">(Source)</a> The second largest is LCK, which had 10 teams with Double Round Robin and BO3 in regular seasons. <a href="https://lol.fandom.com/wiki/LCK/2022_Season">(Source)</a></p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig6.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe>
+      </p>
+      <h4 id="most-picked-champions-in-each-position">Most Picked Champions in Each Position</h4>
+      <p>We first create a pivot table to count the times of champions picked in the roles.</p>
+      <div class="scroll-x"><table>
+      <thead>
+      <tr>
+      <th style="text-align: left;">champion</th>
+      <th style="text-align: right;">Top</th>
+      <th style="text-align: right;">Jungle</th>
+      <th style="text-align: right;">Mid</th>
+      <th style="text-align: right;">Bot</th>
+      <th style="text-align: right;">Support</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td style="text-align: left;">Aatrox</td>
+      <td style="text-align: right;">224</td>
+      <td style="text-align: right;">0</td>
+      <td style="text-align: right;">1</td>
+      <td style="text-align: right;">0</td>
+      <td style="text-align: right;">0</td>
+      </tr>
+      <tr>
+      <td style="text-align: left;">Ahri</td>
+      <td style="text-align: right;">0</td>
+      <td style="text-align: right;">0</td>
+      <td style="text-align: right;">886</td>
+      <td style="text-align: right;">0</td>
+      <td style="text-align: right;">0</td>
+      </tr>
+      <tr>
+      <td style="text-align: left;">Akali</td>
+      <td style="text-align: right;">144</td>
+      <td style="text-align: right;">0</td>
+      <td style="text-align: right;">203</td>
+      <td style="text-align: right;">0</td>
+      <td style="text-align: right;">0</td>
+      </tr>
+      <tr>
+      <td style="text-align: left;">Akshan</td>
+      <td style="text-align: right;">21</td>
+      <td style="text-align: right;">0</td>
+      <td style="text-align: right;">2</td>
+      <td style="text-align: right;">0</td>
+      <td style="text-align: right;">0</td>
+      </tr>
+      <tr>
+      <td style="text-align: left;">Alistar</td>
+      <td style="text-align: right;">0</td>
+      <td style="text-align: right;">0</td>
+      <td style="text-align: right;">0</td>
+      <td style="text-align: right;">0</td>
+      <td style="text-align: right;">270</td>
+      </tr>
+      </tbody>
+      </table></div>
+      <p>From the plots below, we can see the most played 10 picked champions in each position. A long list of picked champions have minimal meaning, but this pivot table condenses information and can provide information about the popular champions for every position, and potentially the better performing ones. </p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig7-1.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe></p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig7-2.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe></p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig7-3.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe></p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig7-4.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe></p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig7-5.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe>
+      </p>
+      <h2 id="assessment-of-missingness">Assessment of Missingness</h2>
+      <h3 id="nmar-analysis">NMAR Analysis</h3>
+      <p>NMAR occurs when the probability of data being missing depends on unobserved information. 
+      As we focus on data for tier 1, we realize that <code>url</code> column in the dataset is missing for some rows.</p>
+      <div class="scroll-x"><table>
+      <thead>
+      <tr>
+      <th>league</th>
+      <th>Count</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>LPL</td>
+      <td>1572</td>
+      </tr>
+      <tr>
+      <td>LEC</td>
+      <td>84</td>
+      </tr>
+      <tr>
+      <td>LCS</td>
+      <td>4</td>
+      </tr>
+      <tr>
+      <td>LCO</td>
+      <td>4</td>
+      </tr>
+      <tr>
+      <td>LCK</td>
+      <td>2</td>
+      </tr>
+      <tr>
+      <td>PCS</td>
+      <td>2</td>
+      </tr>
+      </tbody>
+      </table></div>
+      <div class="scroll-x"><table>
+      <thead>
+      <tr>
+      <th>league</th>
+      <th>Count</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>LPL</td>
+      <td>1572</td>
+      </tr>
+      <tr>
+      <td>LCK</td>
+      <td>934</td>
+      </tr>
+      <tr>
+      <td>VCS</td>
+      <td>646</td>
+      </tr>
+      <tr>
+      <td>LCS</td>
+      <td>612</td>
+      </tr>
+      <tr>
+      <td>PCS</td>
+      <td>542</td>
+      </tr>
+      <tr>
+      <td>LEC</td>
+      <td>486</td>
+      </tr>
+      <tr>
+      <td>CBLOL</td>
+      <td>486</td>
+      </tr>
+      <tr>
+      <td>LJL</td>
+      <td>428</td>
+      </tr>
+      <tr>
+      <td>LCO</td>
+      <td>424</td>
+      </tr>
+      <tr>
+      <td>LLA</td>
+      <td>374</td>
+      </tr>
+      </tbody>
+      </table></div>
+      <p>From above, we see how the LPL is not missing any urls, while others teams completely do not have any urls or have some. If LPL consistently provides this URL while other teams vary, it suggests that the missingness is related to the specific teams themselves. This is NMAR because the presence or absence of a URL linking to match information depends on the team; however, it cannot be recovered by other columns.</p>
+      <p>This indicate differences in how teams handle data reporting regarding match information. It could also reflect differences in resources, priorities, or organizational policies among the teams.</p>
+      <h3 id="missingness-dependency">Missingness Dependency</h3>
+      <p>We would like to carry out permutation tests to test if the missingness of  <code>ban1</code> to <code>ban5</code> columns are dependent to the <code>side</code> column. We chose the test statistic of <strong>TVD</strong> and the p-value cutoff of <strong>0.05</strong>.</p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig8-1.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe></p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig8-2.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe></p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig8-3.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe></p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig8-4.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe></p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig8-5.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe>
+      </p>
+      <p>From the graph above, we can see that the p-values of the permutation tests for 5 ban columns are <strong>much larger than 0.05</strong>, which means that the missingness in the ban columns are <strong>not dependent</strong> on the side of the team.</p>
+      <p>However, is the missingness of ban1 column related to missingness of ban2, ban3, ban4, and/or ban 5? We can perform another permutation test to answer this question.</p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig9-1.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe></p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig9-2.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe></p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig9-3.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe></p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig9-4.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe>
+      </p>
+      <p>Therefore, from the above plots, it is clear that the missingness of <code>ban1</code> is related to the missingness of other <code>ban</code> columns.</p>
+      <h2 id="hypothesis-testing">Hypothesis Testing</h2>
+      <ul>
+      <li>Null hypothesis: The win rates of teams on the Blue and Red sides are equal.</li>
+      <li>Alternative hypothesis: The win rate of teams on the Blue side is higher than the win rate of teams on the Red side.</li>
+      <li>Test statistic: The difference in proportions of win games between the Blue and Red sides.</li>
+      <li>Significant Level(p-value cutoff): 0.05</li>
+      <li>We will perform permutation test to test the hypothesis.</li>
+      </ul>
+      <p>The observed test statistic is 0.0553. The p-value is 0.0. Since the p-value is less than the significant level (0.05), we reject our null hypothesis. From our test, the win rate of teams on the Blue side is higher than the win rate of teams on the Red side.</p>
+      <p><iframe loading="lazy" class="figure-frame"
+        src="/images/league-assets/fig10.html"
+        width="800"
+        height="600"
+        frameborder="0"
+      ></iframe>
+      </p>
+      <h2 id="framing-a-prediction-problem">Framing a Prediction Problem</h2>
+      <p>Our prediction problem is that we want to predict the result of the game at the end of ban/pick. Therefore, it is a binary classification problem. We use the DecisionTreeClassifer to predict 0 and 1 for the <code>result</code> column. We use precision as our metric because we think that it is important to evaluate the false positive of our model because we don't want to be misleading about a strategy that will not make the team win.</p>
+      <h2 id="baseline-model">Baseline Model</h2>
+      <p>In the baseline model, we use <code>pick1</code> to <code>pick5</code> columns as features. They are all nominal variable, having the names of the champions, which is string, so we have 5 nominal features in our baseline model. We use customized one hot encoder to solve the problems that some champions may not appear in the train data but can appear in the test data. We use the <code>DecisionTreeClassifier()</code> with the max depth of 5 to predict. </p>
+      <p>Our train score is 0.5244, and our test score is 0.4771, which are very low, even lower than random chance (p = 0.50). Therefore, we need to include new features and change our feature engineering process.</p>
+      <h2 id="final-model">Final Model</h2>
+      <p>For this part, we are going to include the <code>side</code> column as a new feature to predict the result of the game because we think that side selection can affect the result. As we demonstrated earlier, the win rate of blue side is higher than the win rate of red side.</p>
+      <p>For feature engineering part, we would like to add the feature of pick rate of each champion because this can provide more information about the strength of individual champions. Therefore, we build another customized one hot transformer that one hot encode the champions and also include the pick rates of them. Like the baseline model, we also use <code>DecisionTreeClassifier()</code>.</p>
+      <p>The train and test scores of our new model now become 0.5564 and 0.5159. We can see that the score improves a little bit. We are going to find the best hyperparameters for our model. After running through different hyperparameters, the best hyperparameters are the max_depth of 4 and the min_samples_split of 8, which has the test score of 0.5545.</p>
+      <p>The final model has about 0.04 higher score than our baseline mode. Although it is not very high, we believe that those are reasonable because players and teams are more important than the champions they pick and the side they choose.</p>
+      <h2 id="fairness-analysis">Fairness Analysis</h2>
+      <p>For conducting fairness analysis, we want to compare whether the model works equally for both blue and red side. As our hypothesis testing concluded that we cannot be sure if their side has an effect on winning, we want to further compare the performances between these two groups.</p>
+      <p><img loading="lazy" decoding="async" alt="img2" src="/images/league-assets/confusion.webp" /></p>
+      <p>With consideration that teams may consider selecting champions as one important factor to winning a match, cost of false positive of high. It is worse than false negative, where we predict them to lose while they actually won the match during the game. The grid above also shows out of 183 times, 76 teams actually lost when our model predicted them to win. Therefore, we decide to evalue our model's performance on <strong>precision</strong>, which is 0.5815.</p>
+      <p>We run a hypothesis test to check if the difference of our model performance between blue and red sides is statistically significant.</p>
+      <ul>
+      <li><strong>Null Hypothesis:</strong> The precision of the model for teams on the blue side and red side are roughly the same, and any differences are due to random chance.</li>
+      <li><strong>Alternative Hypothesis:</strong> The precision of the model for teams on the blue side is greather than its precision for teams on the red side.</li>
+      <li>Cutoff: 0.05</li>
+      <li>We will perform permutation testing to test our hypothesis</li>
+      </ul>
+      <p>After performing the permutation test, our p-values is 0.034, which is smaller than our cutoff. Therefore, we reject our null hypothesis, meaning that blue side having a higher precision than the red side.</p>
+    </article>
+
+  </div>
+</main>
+
+<footer class="site-footer wrap--narrow">
+  <div>© 2026 Hsin-Yuan (Samuel) Lee</div>
+  <div class="site-footer__links">
+    <a href="/portfolio.html">Portfolio</a>
+    <a href="https://github.com/samuellee77">GitHub</a>
+  </div>
+</footer>
+
+</body>
+</html>

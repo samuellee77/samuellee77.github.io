@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liver Tumor Detection with U-Net — Hsin-Yuan (Samuel) Lee</title>
+<meta name="description" content="A U-Net segmentation model for detecting liver tumors in CT scans, reaching 68% accuracy on the evaluation set.">
+<link rel="canonical" href="https://samuellee77.github.io/projects/tumor-segmentation.html">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Hsin-Yuan (Samuel) Lee">
+<meta property="og:title" content="Liver Tumor Detection with U-Net">
+<meta property="og:description" content="A U-Net segmentation model for detecting liver tumors in CT scans, reaching 68% accuracy on the evaluation set.">
+<meta property="og:url" content="https://samuellee77.github.io/projects/tumor-segmentation.html">
+<meta property="og:image" content="https://samuellee77.github.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Liver Tumor Detection with U-Net">
+<meta name="twitter:description" content="A U-Net segmentation model for detecting liver tumors in CT scans, reaching 68% accuracy on the evaluation set.">
+<meta name="twitter:image" content="https://samuellee77.github.io/assets/og-image.png">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#fbf8f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#181612" media="(prefers-color-scheme: dark)">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <a class="site-header__name" href="/">Samuel Lee</a>
+  <nav class="site-nav" aria-label="Main">
+    <a href="/">About</a>
+    <a href="/portfolio.html" aria-current="page">Portfolio</a>
+    <a href="/publications.html">Publications</a>
+    <a href="/cv.html">CV</a>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="wrap wrap--narrow" style="padding-top:56px; padding-bottom:80px;">
+
+    <a class="back-link" href="/portfolio.html">&larr; All projects</a>
+
+    <p class="eyebrow">2024</p>
+    <h1 class="page-title">Liver Tumor Detection with U-Net</h1>
+    <p class="lede" style="margin-bottom:24px;">A U-Net segmentation model for detecting liver tumors in CT scans, reaching 68% accuracy on the evaluation set.</p>
+
+    <ul class="meta-row"><li class="tag">Medical imaging</li><li class="tag">Segmentation</li></ul>
+    <div class="pub__links" style="margin:0 0 36px;"><a class="pill" href="/files/Tumor_Presentation_Final.pdf">Slides (PDF)</a></div>
+
+    <article class="prose">
+      <h2 id="liver-tumor-detection-model">Liver Tumor Detection Model</h2>
+      <p><strong>Authors:</strong> Ali, Nathaphat, Samuel Lee</p>
+      <h2 id="introduction">Introduction</h2>
+      <p>Tumor detection is a critical task in medical diagnostics, as it plays a vital role in early intervention and treatment planning. With the large amounts of CT scans that radiologists must go through, we propose a program that helps detect liver tumors. The dataset we will be using is “Medical Image Segmentation: Evaluation” from Kaggle.</p>
+      <h2 id="aim">Aim</h2>
+      <p>The aim of this project is to build a U-Net Model that will be able to predict tumors in the liver with a high accuracy. As well as create a GUI which allows anyone to input a CT scan as an image into a user interface to predict whether there is a tumor or not.</p>
+      <h2 id="data-collection-and-preprocessing">Data Collection and Preprocessing</h2>
+      <p>We first gathered a dataset of medical images containing tumors from the liver from Kaggle (<a href="https://www.kaggle.com/datasets/modaresimr/medical-image-segmentation">Medical Image Segmentation: Evaluation</a>). In the dataset, the images are separated into ground truth (GT) and raw CT scans as <code>.nii</code> files. The ground truth files are scans that radiologists have circled a tumor around.</p>
+      <p><strong>Steps we took for preprocessing:</strong></p>
+      <ol>
+      <li><strong>Conversion:</strong> Convert medical image files (<code>.nii</code>) into slices of the CT scan as PNG files.</li>
+      <li><strong>Verification:</strong> Ensure that the images have corresponding ground truth files.</li>
+      <li><strong>Resizing:</strong> Resize images to ensure consistency between raw and GT files.</li>
+      </ol>
+      <p>To achieve these steps, we converted the 3D CT scan into 2D image slices by utilizing Python libraries such as NumPy for converting 3D arrays into 2D. Then, we looped through the sizes of the files to ensure they were consistent; if not, we resized them to 512 by 512 pixels.</p>
+      <h2 id="model-selection">Model Selection</h2>
+      <p>We had to explore different models to use for representation learning for medical images, and the one that worked the best for this that we found was the U-Net Model. From Olaf Ronneberger, Philipp Fischer, and Thomas Brox’s paper, <strong>“U-Net: Convolutional Networks for Biomedical Image Segmentation”</strong>, we found that this model has been proven to be effective and reliable, utilizing the advantages of CNN. U-shaped skip connections also make it a good choice for medical image segmentation. The model has been used before to identify the boundaries of tumors in other body parts and can perform well with limited training data.</p>
+      <h2 id="model-training-and-validation">Model Training and Validation</h2>
+      <p>For data collection, we split our dataset into training and validation sets. We stored images in folders as pairs containing the raw CT scan and the corresponding GT file for that scan. Then we trained our U-Net model using the training set and validated its performance on the validation set. We applied an appropriate loss function (Mean Squared Error) and used optimization techniques to fine-tune the model's parameters and improve liver tumor detection accuracy.</p>
+      <h2 id="results">Results</h2>
+      <p>The liver tumor detection model achieved an overall accuracy of 68% on the evaluation dataset. While the accuracy indicates that the model performs better than random guessing, it falls short of meeting the desired level of performance for clinical deployment. Several factors might contribute to the lower accuracy of the model. The limited size of the training dataset may not have provided sufficient diversity and representation of different tumor types and imaging conditions. In addition, the short of computing power during our model training process also limit the performance of our model. Additionally, the complexity and heterogeneity of liver tumors pose significant challenges for accurate detection and segmentation.</p>
+      <h2 id="conclusion">Conclusion</h2>
+      <p>In this project, we developed a liver tumor detection model using the U-Net architecture to accurately identify and segment tumors in liver images. The model achieved a 68% accuracy on the evaluation dataset, demonstrating a moderate ability to detect liver tumors. Although the model's performance is not yet optimal, it lays the foundation for future advancements. Addressing limitations, such as the limited training dataset and complex liver tumors, is crucial for enhancing accuracy and robustness. Our next steps involve expanding the dataset, incorporating advanced deep learning techniques, refining the model architecture, and improving preprocessing and augmentation methods. Despite limitations, the model can serve as a valuable supporting tool when used alongside expert radiologists' assessments, potentially reducing workload and providing additional insights. Future work aims to extend the study to other anatomical regions, such as the brain and pancreas, using the U-Net model, to improve results and achieve higher accuracy in tumor detection, ultimately contributing to enhanced clinical decisionmaking and patient care.</p>
+      <h2 id="acknowledgements">Acknowledgements</h2>
+      <p>We would like to thank everyone who has supported us in this project. Firstly, thank you to DS3 student organization for providing us with this project and thank you to the dataset owners. And to our mentor Advaith for providing his help throughout the time span of this project. Also, we’d like to thank ITS UCSD for providing us with tools like the Jupyter Notebook server for running our tumor detection program.</p>
+    </article>
+
+  </div>
+</main>
+
+<footer class="site-footer wrap--narrow">
+  <div>© 2026 Hsin-Yuan (Samuel) Lee</div>
+  <div class="site-footer__links">
+    <a href="/portfolio.html">Portfolio</a>
+    <a href="https://github.com/samuellee77">GitHub</a>
+  </div>
+</footer>
+
+</body>
+</html>

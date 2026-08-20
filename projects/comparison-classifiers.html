@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evaluating Classifier Performance Across Datasets and Partition Strategies — Hsin-Yuan (Samuel) Lee</title>
+<meta name="description" content="Random Forest, Logistic Regression, and SVM compared across three UCI datasets under varying train-test partitions.">
+<link rel="canonical" href="https://samuellee77.github.io/projects/comparison-classifiers.html">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Hsin-Yuan (Samuel) Lee">
+<meta property="og:title" content="Evaluating Classifier Performance Across Datasets and Partition Strategies">
+<meta property="og:description" content="Random Forest, Logistic Regression, and SVM compared across three UCI datasets under varying train-test partitions.">
+<meta property="og:url" content="https://samuellee77.github.io/projects/comparison-classifiers.html">
+<meta property="og:image" content="https://samuellee77.github.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Evaluating Classifier Performance Across Datasets and Partition Strategies">
+<meta name="twitter:description" content="Random Forest, Logistic Regression, and SVM compared across three UCI datasets under varying train-test partitions.">
+<meta name="twitter:image" content="https://samuellee77.github.io/assets/og-image.png">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#fbf8f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#181612" media="(prefers-color-scheme: dark)">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <a class="site-header__name" href="/">Samuel Lee</a>
+  <nav class="site-nav" aria-label="Main">
+    <a href="/">About</a>
+    <a href="/portfolio.html" aria-current="page">Portfolio</a>
+    <a href="/publications.html">Publications</a>
+    <a href="/cv.html">CV</a>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="wrap wrap--narrow" style="padding-top:56px; padding-bottom:80px;">
+
+    <a class="back-link" href="/portfolio.html">&larr; All projects</a>
+
+    <p class="eyebrow">2024</p>
+    <h1 class="page-title">Evaluating Classifier Performance Across Datasets and Partition Strategies</h1>
+    <p class="lede" style="margin-bottom:24px;">Random Forest, Logistic Regression, and SVM compared across three UCI datasets under varying train-test partitions.</p>
+
+    <ul class="meta-row"><li class="tag">Classical ML</li><li class="tag">Benchmarking</li></ul>
+
+    <article class="prose">
+      <h2 id="abstract">Abstract</h2>
+      <p>This study evaluates the performance of Random Forest, Logistic Regression, and Support Vector Machine classifiers on UCI datasets (Adult, Wine Quality, and Breast Cancer) under varying train-test splits. Random Forest consistently achieved high accuracy, Logistic Regression excelled with smaller training sizes, and Support Vector Machine performed best with sufficient data. Partition size influenced results, benefiting larger datasets like Wine Quality but causing overfitting in the small Breast Cancer dataset. These findings highlight the importance of aligning models and data strategies with dataset characteristics for optimal performance.</p>
+      <h2 id="1-introduction">1 Introduction</h2>
+      <p>Machine learning classification is integral to applications such as medical diagnosis and financial forecasting. Among its tasks, two-class classification is particularly foundational. The success of a classification model relies on its ability to generalize across diverse datasets and perform effectively under varying hyperparameter configurations and training data proportions.</p>
+      <p>This study investigates the performance of three widely used classifiers—Random Forest, Logistic Regression, and Support Vector Machine—on datasets with varying characteristics from the UCI Machine Learning Repository: Adult, Wine Quality, and Breast Cancer. Inspired by the work of Caruana and Niculescu-Mizil [1], each classifier was evaluated under multiple train-test partition schemes (20/80, 50/50, and 80/20) and fine-tuned using GridSearchCV to optimize hyperparameters. Performance metrics, including training, validation, and test accuracy, were analyzed to compare classifier strengths and weaknesses.</p>
+      <p>By systematically examining the effects of partition size, dataset characteristics, and model tuning, this research provides insights into the behavior of different classifiers and highlights practical strategies for optimizing their performance. The findings aim to guide model selection and deployment in diverse real-world scenarios while reinforcing the importance of systematic experimentation in machine learning.</p>
+      <h2 id="2-methods">2 Methods</h2>
+      <h3 id="21-datasets">2.1 Datasets</h3>
+      <p>This project uses three datasets from UCI Machine Learning Repository:</p>
+      <p><strong>Adult</strong>: The Adult dataset is sourced from the 1994 U.S. Census and comprises 48,842 instances, each described by 14 demographic or economic attributes [2]. The primary objective is to predict whether an individual's annual income exceeds \$50,000 based on these demographic and economic factors.</p>
+      <p><strong>Wine Quality</strong>: The Wine Quality dataset comprises two datasets related to red and white variants of Portuguese "Vinho Verde" wine [3]. The dataset includes 6,497 instances and 11 physicochemical attributes. The primary objective is to model wine quality based on these physicochemical tests. Original labels (quality) range from 3 to 9 (integer), but for convenience, labels were transformed into 1 (quality &gt; 5; good) and 0 (quality &lt;= 5; bad).</p>
+      <p><strong>Breast Cancer</strong>: The Breast Cancer dataset comprises 286 instances, each characterized by 9 attributes, including age, menopause status, tumor size, and degree of malignancy [4]. The primary objective is to classify cases into 'no-recurrence-events' or 'recurrence-events' based on these attributes. Notably, the dataset contains missing values in certain fields.</p>
+      <h3 id="22-data-preprocessing-and-feature-engineering">2.2 Data Preprocessing and Feature Engineering</h3>
+      <p>Preprocessing and feature transformations were tailored to the requirements of each dataset to ensure compatibility with the selected classifiers.</p>
+      <h4 id="adult">Adult</h4>
+      <ul>
+      <li>Rows with missing values were removed.</li>
+      <li>The variable <em>education</em> was dropped as it is redundant with <em>education-num</em>.</li>
+      <li>Categorical variables were transformed using one-hot encoding.</li>
+      </ul>
+      <h4 id="wine-quality">Wine Quality</h4>
+      <ul>
+      <li>Labels were simplified into binary categories to represent "good" (1; quality &gt; 5) and "bad" (0; quality &lt;= 5) wine quality.</li>
+      <li>item No missing values or categorical data were reported, reducing preprocessing overhead.</li>
+      </ul>
+      <h4 id="breast-cancer">Breast Cancer</h4>
+      <ul>
+      <li>Rows with missing values were excluded from the analysis.</li>
+      <li>Binary features and labels were converted into numerical representations (0 and 1).</li>
+      <li>Ordinal encoding was applied to attributes like <em>age</em>, <em>tumor-size, and </em>inv-nodes*.</li>
+      <li>Categorical variables such as <em>menopause</em>, <em>breast</em>, and <em>breast-quad</em> were transformed using one-hot encoding.</li>
+      </ul>
+      <h3 id="23-classifiers">2.3 Classifiers</h3>
+      <p>The project evaluates three machine learning models implemented using the Scikit-learn library:</p>
+      <p><strong>Random Forest Classifier (RF)</strong>: A robust ensemble method that constructs multiple decision trees during training and outputs the mode of their predictions for classification tasks. The parameter of max_features was fine-tuned using cross-validation.</p>
+      <p><strong>Logistic Regression Classifier (LR)</strong>: A linear model that predicts probabilities and classifies data by applying a logistic function to a linear combination of input characteristics. The L2 penalty regularization technique was employed to mitigate overfitting. The C parameter was chosen among the factors of 10 from 0.001 to 1000 using cross-validation.</p>
+      <p><strong>Support Vector Machine (SVM)</strong>: A powerful algorithm that seeks an optimal hyperplane to separate data points in feature space. It uses the RBF kernel, and the C parameter was chosen among 0.01, 0.1, 1, 10, 100 using cross-validation.</p>
+      <h3 id="24-hyperparameters-tuning">2.4 Hyperparameters Tuning</h3>
+      <p>Hyperparameter optimization was performed using <strong>GridSearchCV</strong>, a method provided by Scikit-learn that systematically tests multiple combinations of hyperparameters to identify the best configuration for each classifier. This ensures that each model operates at its optimal settings for the given dataset.</p>
+      <p>For each classifier, a range of hyperparameter values was defined based on common practices and the specific needs of the datasets. GridSearchCV used k-fold cross-validation (with k=5) to evaluate each parameter combination. The metric used for selecting the best model primarily focused on accuracy.</p>
+      <h3 id="25-performance-metric">2.5 Performance Metric</h3>
+      <p>The primary performance metric for this project was accuracy, which measures the proportion of correctly classified instances. Accuracy was chosen for its simplicity and effectiveness, especially since the datasets were either balanced or preprocessed to minimize class imbalances. It provided a straightforward way to compare model performance across datasets and classifiers.</p>
+      <h2 id="3-experiment">3 Experiment</h2>
+      <h3 id="31-experimental-setup">3.1 Experimental Setup</h3>
+      <p>The experiment involved training three classifiers on three datasets using three train-test data partitions: 20/80, 50/50, and 80/20. Hyperparameters for each combination were tuned beforehand and stored in a JSON file to avoid redundant computations during training.</p>
+      <p>For each combination of classifier, dataset, and data partition, the model was trained three times using the corresponding pre-tuned hyperparameters. This repetition ensured that results were not influenced by extreme performance variations. The train accuracy, test accuracy, and mean cross-validation accuracy from these three trials were averaged and recorded in a result dataframe.</p>
+      <p>The final result dataframe contained 81 rows, representing the 3 classifiers × 3 datasets × 3 data partitions (20/80, 50/50, 80/20) × 3 accuracy metrics. This comprehensive dataset enabled grouped analyses to compare performance across classifiers, training data sizes, and datasets, providing detailed insights into the strengths and weaknesses of each model.</p>
+      <h3 id="32-results">3.2 Results</h3>
+      <p>The following results focus on the test accuracy.</p>
+      <h4 id="321-comparison-for-different-algorithms">3.2.1 Comparison for different algorithms</h4>
+      <p>After training, the performance of the classifiers varied across datasets. For the Wine Quality and Adult datasets, the Random Forest Classifier consistently achieved the highest accuracy regardless of the partition size. However, for the Breast Cancer dataset, the performance of each classifier was more influenced by the partition size:</p>
+      <ul>
+      <li>In the 20/80 split, the Support Vector Machine (SVM) slightly outperformed the other classifiers.</li>
+      <li>In the 50/50 split, the Random Forest Classifier demonstrated the best accuracy.</li>
+      <li>In the 80/20 split, the SVM showed a significant improvement, outperforming the other two classifiers.</li>
+      </ul>
+      <p>These results suggest that the Random Forest Classifier is generally robust across different datasets, while Logistic Regression and SVM are more sensitive to the characteristics of the dataset and the size of the training set. The trends are visualized in Figure 1.</p>
+      <p><img loading="lazy" decoding="async" alt="Algorithm Comparison" src="/images/algo_comparison.webp" />
+      <strong>Figure 1</strong>: Accuracy comparison across classifiers for different datasets and partition sizes.</p>
+      <h4 id="322-comparison-on-different-partitions">3.2.2 Comparison on different partitions</h4>
+      <p>The effect of train-test partition size on classifier performance varied by dataset:</p>
+      <ul>
+      <li>For the Wine Quality dataset, Random Forest Classifier and SVM show steady improvement in accuracy as the training size increases, leveraging the additional data effectively, while Logistic Regression maintains stable accuracy across all training sizes.</li>
+      <li>For the Adult dataset, the accuracy of the classifiers remained relatively stable across all partition sizes, indicating that the classifiers quickly reached their maximum performance even with smaller training sets.</li>
+      <li>For the Breast Cancer dataset, the accuracy of Logistic Regression model shows a slight decrease in accuracy with larger training sizes. The accuracy of random forest increases a little at 50/50 split but decreases a lot at 80/80 split. Random Forest Classifier performs best at the 50/50 split but drops significantly at the 80/20 split, and SVM improves consistently with more training data, achieving its highest accuracy at the 80/20 split.</li>
+      </ul>
+      <p>The relationship between partition sizes and accuracy is summarized in Figure 2.</p>
+      <p><img loading="lazy" decoding="async" alt="Partition Comparison" src="/images/partition_comparison.webp" />
+      <strong>Figure 2</strong>: Accuracy trends across partition sizes for different datasets.</p>
+      <h3 id="33-analysis">3.3 Analysis</h3>
+      <p>The results highlight key patterns in classifier performance across datasets and partition sizes, providing insights into the strengths and limitations of each algorithm and how dataset characteristics impact model behavior.</p>
+      <h4 id="331-performance-across-algorithms">3.3.1 Performance Across Algorithms</h4>
+      <p>The <strong>Random Forest Classifier</strong> consistently achieved high accuracy for the <strong>Wine Quality</strong> and <strong>Adult</strong> datasets across all partition sizes. This result demonstrates its robustness and ability to capture complex patterns in the data. The ensemble nature of Random Forest likely allows it to generalize well, even with varying training set sizes.</p>
+      <p>In contrast, <strong>Logistic Regression</strong> exhibited relatively stable performance for all dataset across all partition sizes, emphasizing its simplicity and effectiveness in datasets with straightforward features. For the Breast Cancer dataset, accuracy slightly declined with larger training sizes, likely due to its reliance on linear decision boundaries and susceptibility to overfitting in small datasets.</p>
+      <p><strong>Support Vector Machine (SVM)</strong> showed consistent improvements in accuracy with increased training sizes for the Wine Quality and Breast Cancer datasets. It achieved its best performance in the <strong>Breast Cancer</strong> dataset at the largest training size <strong>80/20 split</strong>, underscoring its need for sufficient data to optimize the hyperplane effectively. For the Adult dataset, SVM performance remained stable, comparable to Random Forest and Logistic Regression.</p>
+      <h4 id="332-impact-of-partition-size">3.3.2 Impact of Partition Size</h4>
+      <p>Partition size had a varied effect on classifier performance depending on the dataset:</p>
+      <ul>
+      <li>For the <strong>Wine Quality</strong> dataset, the <strong>Random Forest Classifier</strong> and <strong>SVM</strong> demonstrated consistent accuracy improvements with larger training sizes, suggesting the dataset's complexity benefits from additional training data. Logistic Regression maintained stable accuracy across partitions, indicating limited gains from more training data due to its linear nature.</li>
+      <li>For the <strong>Adult</strong> dataset, accuracy remained stable regardless of the partition size. This indicates that the dataset may already provide sufficient information in smaller training sets for the classifiers to reach their optimal performance. It also suggests that the features in the dataset are straightforward and not overly complex.</li>
+      <li>For the <strong>Breast Cancer</strong> dataset, the Logistic Regression model's accuracy slightly decreased with larger training sizes, potentially due to overfitting caused by the small dataset size. <strong>Random Forest</strong> achieved a peak accuracy at the 50/50 split but saw a notable decline at the 80/20 split, likely due to reduced test data and overfitting. <strong>SVM</strong> showed consistent improvement, achieving the highest accuracy at the largest training size (80/20 split), demonstrating its capacity to handle smaller, high-dimensional datasets effectively when enough training data is available.</li>
+      </ul>
+      <h4 id="332-comparative-insights">3.3.2 Comparative Insights</h4>
+      <p>The <strong>Adult</strong> dataset showed that stable performance can be achieved even with smaller training sizes, making it ideal for tasks with limited data. The <strong>Breast Cancer</strong> dataset highlighted the challenges of working with small datasets, where overfitting and sampling issues can obscure model performance. For the <strong>Wine Quality</strong> dataset, Random Forest and SVM demonstrated the benefit of additional training data, while Logistic Regression reached its performance ceiling early, reflecting the varying capacities of these classifiers to leverage complex datasets.</p>
+      <h2 id="conclusion">Conclusion</h2>
+      <p>This study evaluated the performance of three machine learning classifiers—Random Forest, Logistic Regression, and Support Vector Machine—across three datasets (Adult, Wine Quality, and Breast Cancer) under varying train-test splits. The results demonstrate that Random Forest consistently achieved the highest accuracy for most datasets, showcasing its robustness and ability to handle complex patterns effectively. Logistic Regression, while stable, showed limitations in leveraging additional training data, particularly for more complex datasets. Support Vector Machine performed best when provided with sufficient training data, particularly excelling in smaller, high-dimensional datasets like Breast Cancer.</p>
+      <p>Partition size significantly influenced classifier performance, with Random Forest and SVM benefiting from larger training sizes in the Wine Quality dataset, while Logistic Regression exhibited minimal variation. For the Adult dataset, all classifiers achieved stable accuracy regardless of partition size, reflecting its simplicity. However, the Breast Cancer dataset revealed the challenges of small datasets, with overfitting affecting Random Forest and Logistic Regression, while SVM excelled with larger training sizes.</p>
+      <h2 id="references">References</h2>
+      <p>[1] Caruana, R. and Niculescu-Mizil, A. (2006) An Empirical Comparison of Supervised Learning Algorithms. Proceedings of the 23rd International Conference on Machine Learning, Pittsburgh, 25-29 June 2006.
+      http://doi.org/10.1145/1143844.1143865</p>
+      <p>[2] Becker, B. and Kohavi, R. (1996). Adult [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C5XW20.</p>
+      <p>[3] Cortez, P., Cerdeira, A., Almeida, F., Matos, T., and Reis, J. (2009). Wine Quality [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C56S3T.</p>
+      <p>[4] Zwitter, M. and Soklic, M. (1988). Breast Cancer [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C51P4M.</p>
+    </article>
+
+  </div>
+</main>
+
+<footer class="site-footer wrap--narrow">
+  <div>© 2026 Hsin-Yuan (Samuel) Lee</div>
+  <div class="site-footer__links">
+    <a href="/portfolio.html">Portfolio</a>
+    <a href="https://github.com/samuellee77">GitHub</a>
+  </div>
+</footer>
+
+</body>
+</html>
