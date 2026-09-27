@@ -60,7 +60,7 @@
   <div class="wrap wrap--cv" style="padding-bottom:80px;">
 
     <p class="entry__sub" style="margin-bottom:8px;"><strong>Research interests:</strong>
-      Multimodal learning · Neurocomputational vision · LLM-based scientific reasoning</p>
+      Mechanistic interpretability · LLM evaluation · Neurocomputational vision · LLM-based scientific reasoning</p>
 
     <h2 class="cv-section-title">Education</h2>
 
@@ -70,7 +70,7 @@
           <div class="entry__org">University of California, Los Angeles</div>
           <div class="entry__sub">M.S. in Computer Science</div>
         </div>
-        <div class="entry__date">Starting Fall 2026</div>
+        <div class="entry__date">Sep 2026 – Jun 2028 (expected)</div>
       </div>
     </div>
 
@@ -81,8 +81,35 @@
           <div class="entry__sub">B.S. Data Science &amp; B.S. Cognitive Science (ML / Neural Computation)</div>
           <div class="entry__sub" style="margin-top:4px;">GPA 3.92 / 4.00 · Provost's Honors (8×)</div>
         </div>
-        <div class="entry__date">June 2026</div>
+        <div class="entry__date">Sep 2022 – Jun 2026</div>
       </div>
+    </div>
+
+    <h2 class="cv-section-title">Industry experience</h2>
+
+    <div class="entry">
+      <div class="entry__head">
+        <div class="entry__org">Realtek Semiconductor Corp. — Hsinchu, Taiwan</div>
+        <div class="entry__date">Jul 2026 – Sep 2026</div>
+      </div>
+      <div class="entry__role">Summer AI Intern</div>
+      <ul>
+        <li>Built an AI code-synchronization system combining a Jenkins agent with a Claude Code agent, cutting each sync across 4 parallel branches from ~4 hours to under 20 minutes.</li>
+        <li>Scaled the workflow to 400+ repositories used by a 30-engineer team.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry__head">
+        <div class="entry__org">Advantech Co., Ltd. — Taipei, Taiwan</div>
+        <div class="entry__date">Jun 2023 – Sep 2023</div>
+      </div>
+      <div class="entry__role">Software Development Intern</div>
+      <ul>
+        <li>Built a <a href="https://github.com/samuellee77/azure-openai-chat-forum-bot">RAG chatbot</a> on Azure OpenAI and Azure AI Search with automated document ingestion, deployed as a Discourse forum bot and web chatbot; cut response time from days to under 20 seconds.</li>
+        <li>Designed a punctuation-aware Mandarin tokenizer that lifted ambiguous-query retrieval accuracy from 34% to 76%.</li>
+        <li>Won the Best Technical Intern Project award.</li>
+      </ul>
     </div>
 
     <h2 class="cv-section-title">Research experience</h2>
@@ -94,10 +121,9 @@
       </div>
       <div class="entry__role">Undergraduate Research Assistant · Advisor: Prof. Garrison Cottrell</div>
       <ul>
-        <li>Developed a neurocomputational vision model using fixation-based sampling and log-polar transforms.</li>
-        <li>Implemented a salience-weighted preprocessing pipeline for configural vs. featural face structure.</li>
-        <li>Demonstrated the Face Inversion Effect in model behavior, aligned with human visual processing.</li>
-        <li>First-authored a paper published at <strong>CogSci 2026</strong>.</li>
+        <li>Trained a ResNet-18 with fixation-based sampling, log-polar transforms, and salience-weighted preprocessing on 76,800 images of 384 face, dog, and object identities.</li>
+        <li>Reproduced the human Face Inversion Effect, matching human accuracy within 6% in all four Yin (1969) conditions.</li>
+        <li>Co-first-authored a paper published at <strong>CogSci 2026</strong>.</li>
       </ul>
     </div>
 
@@ -108,51 +134,47 @@
       </div>
       <div class="entry__role">Research and Development Intern · Advisor: Dr. Neil Smith</div>
       <ul>
-        <li>Built interactive LLM-driven 3D avatars integrating language, speech, and gesture in Unreal Engine 5.</li>
-        <li>Designed a modular LLM–TTS–Animation pipeline using FastAPI and Kubernetes.</li>
-        <li>Reduced avatar response latency ~25% through pipeline optimizations and cloud deployment.</li>
-      </ul>
-    </div>
-
-    <h2 class="cv-section-title">Industry experience</h2>
-
-    <div class="entry">
-      <div class="entry__head">
-        <div class="entry__org">Realtek Semiconductor Corp. — Hsinchu, Taiwan</div>
-        <div class="entry__date">Jul 2026 – Sep 2026</div>
-      </div>
-      <div class="entry__role">Summer Intern</div>
-      <ul>
-        <li>Designing AI skills for code synchronization processes supporting parallel development.</li>
-        <li>Reduced the time required for code synchronization by 30%.</li>
-        <li>Generalizing the code synchronization approach for broader application.</li>
-      </ul>
-    </div>
-
-    <div class="entry">
-      <div class="entry__head">
-        <div class="entry__org">Advantech Co., Ltd. — Taipei, Taiwan</div>
-        <div class="entry__date">Jun 2023 – Sep 2023</div>
-      </div>
-      <div class="entry__role">Software Development Intern</div>
-      <ul>
-        <li>Built a production-grade RAG chatbot using Azure OpenAI, cutting support response time to &lt; 20 seconds.</li>
-        <li>Designed a punctuation-aware Mandarin tokenizer to improve retrieval accuracy.</li>
-        <li>Selected for Best Technical Intern Project.</li>
+        <li>Built interactive LLM-driven 3D avatars with speech and gesture generation, writing the core system in C++ and Unreal Engine 5 Blueprints; demoed to 20+ visitors.</li>
+        <li>Designed and deployed a modular LLM–TTS–animation pipeline on FastAPI and Kubernetes, reducing avatar response latency by ~25%.</li>
       </ul>
     </div>
 
     <h2 class="cv-section-title">Publications</h2>
     <div class="entry">
       <ul>
-        <li><strong>A Mechanistic Explanation for the Inverted Face Effect.</strong>
-          <em>CogSci 2026</em>. <a href="https://escholarship.org/uc/item/4pr236xw">Proceedings</a>.</li>
+        <li><strong>When AI Explains AI: Understanding and Mitigating the Interpretability
+          Lottery.</strong> Under review, <em>ICLR 2027</em>. First author.</li>
         <li><strong>HypoEvolve: When Genetic Algorithms Meet Multi-Agent LLMs for Scientific
-          Hypothesis Discovery.</strong> Under review, <em>NeurIPS 2026</em>.</li>
+          Hypothesis Discovery.</strong> Under review, <em>ICLR 2027</em>.</li>
+        <li><strong>A Mechanistic Explanation for the Inverted Face Effect.</strong>
+          <em>CogSci 2026</em>. Co-first author. <a href="https://escholarship.org/uc/item/4pr236xw">Proceedings</a>.</li>
       </ul>
       <p class="entry__sub" style="margin-top:10px;">
         Full list on <a href="/publications.html">the publications page</a> and
         <a href="https://scholar.google.com/citations?user=2uWAf1gAAAAJ">Google Scholar</a>.</p>
+    </div>
+
+    <h2 class="cv-section-title">Selected projects</h2>
+
+    <div class="entry">
+      <div class="entry__head">
+        <div class="entry__org">Reliability of Sparse Autoencoder Auto-Interpretability</div>
+        <div class="entry__date">Mar 2026 – Present</div>
+      </div>
+      <ul>
+        <li>Built an LLM auto-interpretability pipeline (Claude Haiku explainer, GPT-4o-mini scorer) for Gemma-2-2B sparse-autoencoder features and ran it 10,000 times; no feature kept a single label across reruns.</li>
+        <li>Traced the instability to explainer example selection with a 2×2×2 factorial design; fixing top-k example contexts cut it by 47% (95% CI 43–51%) on held-out features.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry__head">
+        <div class="entry__org"><a href="https://github.com/kabir-vats/Deep-Climate-Learning">Deep Climate Learning</a></div>
+        <div class="entry__date">Mar 2025 – Jun 2025</div>
+      </div>
+      <ul>
+        <li>Built CNN-MLP and ClimaX transformer models in PyTorch Lightning to forecast precipitation and temperature; ranked 2nd of 83 teams and cut RMSE by 46% vs. baseline.</li>
+      </ul>
     </div>
 
     <h2 class="cv-section-title">Teaching &amp; leadership</h2>
@@ -179,9 +201,9 @@
 
     <h2 class="cv-section-title">Skills</h2>
     <div class="skills">
-      <div><strong>Languages:</strong> Python, SQL, JavaScript, Java, R, C++</div>
-      <div><strong>ML &amp; AI:</strong> PyTorch, TensorFlow, Keras, NumPy, Pandas, scikit-learn, HuggingFace, CNNs, Transformers</div>
-      <div><strong>Tools:</strong> Git, Docker, Kubernetes, FastAPI, Flask, Jupyter, Azure OpenAI, LangChain, Unreal Engine 5</div>
+      <div><strong>Languages:</strong> Python, C++, JavaScript</div>
+      <div><strong>ML &amp; AI:</strong> PyTorch, PyTorch Lightning, TensorFlow, Keras, NumPy, Pandas, scikit-learn, HuggingFace, CNNs, Transformers, LLMs, RAG, AI Agents</div>
+      <div><strong>Tools:</strong> Git, Docker, Kubernetes, Jenkins, FastAPI, Flask, Jupyter, AWS (EC2, S3), Azure OpenAI, Azure AI Search, LangChain, Claude Code, Unreal Engine 5</div>
     </div>
 
   </div>

@@ -13,3 +13,6 @@ node_modules
 package-lock.json
 
 .DS_Store
+
+# Private resume sources and PDFs (contain phone number)
+resumes/
