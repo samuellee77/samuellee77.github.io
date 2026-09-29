@@ -92,10 +92,12 @@
         <div class="entry__org">Realtek Semiconductor Corp. — Hsinchu, Taiwan</div>
         <div class="entry__date">Jul 2026 – Sep 2026</div>
       </div>
-      <div class="entry__role">Summer AI Intern</div>
+      <div class="entry__role">Software Engineering Intern</div>
       <ul>
-        <li>Built an AI code-synchronization system combining a Jenkins agent with a Claude Code agent, cutting each sync across 4 parallel branches from ~4 hours to under 20 minutes.</li>
-        <li>Scaled the workflow to 400+ repositories used by a 30-engineer team.</li>
+        <li>Built two Jenkins-integrated Bash/Python automation tools (~9,900 lines) that replaced a manual Git/Gerrit repo-mirroring workflow, cutting full-repository sync from ~3 hours to ~25 minutes across 400+ repositories used by a 30-engineer team.</li>
+        <li>Built a SHA-256 checksum diff engine across git worktrees for binary and Git LFS repositories that <code>git diff</code> can't compare.</li>
+        <li>Automated cross-branch cherry-picks with <code>git patch-id</code> matching, plus one-click pushes to Gerrit review with CSV audit trails.</li>
+        <li>Wrote SKILL.md specifications that let a Claude Code agent drive the multi-step workflow, and packaged the tools as a versioned skill hub for other engineers.</li>
       </ul>
     </div>
 
@@ -205,7 +207,7 @@
     <div class="skills">
       <div><strong>Languages:</strong> Python, C++, JavaScript</div>
       <div><strong>ML &amp; AI:</strong> PyTorch, PyTorch Lightning, TensorFlow, Keras, NumPy, Pandas, scikit-learn, HuggingFace, CNNs, Transformers, LLMs, RAG, AI Agents</div>
-      <div><strong>Tools:</strong> Git, Docker, Kubernetes, Jenkins, FastAPI, Flask, Jupyter, AWS (EC2, S3), Azure OpenAI, Azure AI Search, LangChain, Claude Code, Unreal Engine 5</div>
+      <div><strong>Tools:</strong> Git, Gerrit, Bash, Docker, Kubernetes, Jenkins, FastAPI, Flask, Jupyter, AWS (EC2, S3), Azure OpenAI, Azure AI Search, LangChain, Claude Code, Unreal Engine 5</div>
     </div>
 
   </div>
