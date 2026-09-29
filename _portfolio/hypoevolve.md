@@ -8,7 +8,7 @@ order: 0
 ## Overview
 
 **HypoEvolve** is my senior capstone project (UCSD DSC 180A/B) and the project behind the
-manuscript currently under review at ICLR 2027. It treats scientific hypothesis generation
+manuscript currently under review at ICLR 2027 ([arXiv](https://arxiv.org/abs/2609.15938)). It treats scientific hypothesis generation
 as an **evolutionary optimization** problem: instead of a single-pass LLM prompt, a
 population of candidate hypotheses is iteratively reviewed, selected, recombined, and
 mutated by a multi-agent LLM loop.
